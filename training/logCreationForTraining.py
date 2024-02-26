@@ -7,6 +7,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 import fitz
 import datetime
+from skimage.feature import local_binary_pattern
 
 # Function to extract features from an image
 # def extract_features(image):
@@ -70,11 +71,11 @@ def extract_features(image):
     resolution = image.shape[1], image.shape[0]
     features.extend(resolution)
 
-    # Color Histograms (RGB color space)
-    hist_r = cv2.calcHist([image], [0], None, [256], [0, 256])
-    hist_g = cv2.calcHist([image], [1], None, [256], [0, 256])
-    hist_b = cv2.calcHist([image], [2], None, [256], [0, 256])
-    features.extend(np.concatenate((hist_r, hist_g, hist_b)).flatten())
+#    # Color Histograms (RGB color space)
+#    hist_r = cv2.calcHist([image], [0], None, [256], [0, 256])
+#    hist_g = cv2.calcHist([image], [1], None, [256], [0, 256])
+#    hist_b = cv2.calcHist([image], [2], None, [256], [0, 256])
+#    features.extend(np.concatenate((hist_r, hist_g, hist_b)).flatten())
 
     # Texture Features (LBP)
     lbp = local_binary_pattern(gray, 8, 1, method='uniform')
@@ -90,7 +91,7 @@ def extract_features(image):
 
 
 # Function to process a PDF document
-def process_pdf(pdf_path, label):
+def process_pdf(filename, pdf_path, label):
     features_list = []
     doc = fitz.open(pdf_path)
     for page_num in range(len(doc)):
@@ -101,7 +102,7 @@ def process_pdf(pdf_path, label):
         # Extract features from the image
         features = extract_features(img)
         features_list.append(features)
-        log_file.write(f"Page {page_num + 1}: Features: {features}, Label: {label}\n")
+        log_file.write(f"{filename},{page_num+1},{features[0]},{features[1]},{features[2]},{features[3]},{features[4]},{features[5]},{features[6]},{features[7]},{features[8]},{features[9]},{features[10]},{features[11]},{features[12]},1")
 
     doc.close()
     return features_list, [label] * len(features_list)
@@ -113,30 +114,13 @@ def process_pdf_directory(directory):
     for filename in os.listdir(directory):
         if filename.endswith('.pdf'):
             pdf_path = os.path.join(directory, filename)
-            features, labels = process_pdf(pdf_path, label=1)  # Assuming all pages are high quality
+            features, labels = process_pdf(filename, pdf_path, label=1)  # Assuming all pages are high quality
             X.extend(features)
             y.extend(labels)
     return X, y
 
 # Process PDF documents in the specified directory
-pdf_directory = '.'
+pdf_directory = 'pdfFiles'
 log_file = 'logs/trainingLogs.csv'
 with open(log_file, 'w') as log_file:
     X, y = process_pdf_directory(pdf_directory)
-
-
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# Initialize the Random Forest classifier
-clf = RandomForestClassifier(n_estimators=100, random_state=42)
-
-# Train the classifier
-clf.fit(X_train, y_train)
-
-# Make predictions on the testing set
-y_pred = clf.predict(X_test)
-
-# Evaluate the accuracy of the model
-accuracy = accuracy_score(y_test, y_pred)
-print("Accuracy:", accuracy)
