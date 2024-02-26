@@ -70,6 +70,22 @@ def extract_features(image):
     resolution = image.shape[1], image.shape[0]
     features.extend(resolution)
 
+    # Color Histograms (RGB color space)
+    hist_r = cv2.calcHist([image], [0], None, [256], [0, 256])
+    hist_g = cv2.calcHist([image], [1], None, [256], [0, 256])
+    hist_b = cv2.calcHist([image], [2], None, [256], [0, 256])
+    features.extend(np.concatenate((hist_r, hist_g, hist_b)).flatten())
+
+    # Texture Features (LBP)
+    lbp = local_binary_pattern(gray, 8, 1, method='uniform')
+    lbp_hist, _ = np.histogram(lbp, bins=np.arange(0, 10), density=True)
+    features.extend(lbp_hist)
+
+    # Shape Features (Number of contours)
+    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    num_contours = len(contours)
+    features.append(num_contours)
+
     return features
 
 
@@ -104,7 +120,7 @@ def process_pdf_directory(directory):
 
 # Process PDF documents in the specified directory
 pdf_directory = '.'
-log_file = '../logs/trainingLogs.csv'
+log_file = 'logs/trainingLogs.csv'
 with open(log_file, 'w') as log_file:
     X, y = process_pdf_directory(pdf_directory)
 

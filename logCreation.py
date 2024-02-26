@@ -104,7 +104,7 @@ def process_pdf_directory(directory):
 
 # Process PDF documents in the specified directory
 pdf_directory = '.'
-log_file = './logs/pdfLogs.csv'
+log_file = 'logs/pdfLogs.csv'
 with open(log_file, 'w') as log_file:
     X, y = process_pdf_directory(pdf_directory)
 

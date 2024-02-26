@@ -24,7 +24,7 @@ model = XGBClassifier()
 model.fit(X_train, y_train)
 
 # Save the trained model
-dump(model, 'model.joblib')
+dump(model, 'training/model.joblib')
 
 # Make predictions on the testing set
 y_pred = model.predict(X_test)

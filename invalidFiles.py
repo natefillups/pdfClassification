@@ -6,7 +6,7 @@ model = load('./training/model.joblib')
 
 # Read the CSV file into a pandas DataFrame
 column_names = ['fileName', 'pageNumber', 'edgeData', 'laplacianData', 'noiseData', 'pdfHeight', 'pdfWidth', 'valid']
-df = pd.read_csv('./logs/pdfLogs.csv', names=column_names, header=None)
+df = pd.read_csv('logs/pdfLogs.csv', names=column_names, header=None)
 
 # Extract features
 X = df[['edgeData', 'laplacianData', 'noiseData', 'pdfHeight', 'pdfWidth']]
