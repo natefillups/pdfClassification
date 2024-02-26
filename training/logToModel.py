@@ -5,13 +5,13 @@ from sklearn.metrics import accuracy_score
 from joblib import dump
 
 # Provide column names explicitly
-column_names = ['fileName', 'pageNumber', 'edgeData', 'laplacianData', 'noiseData', 'pdfHeight', 'pdfWidth', 'valid']
+column_names = ['fileName', 'pageNumber', 'edgeData', 'laplacianData', 'noiseData', 'pdfHeight', 'pdfWidth', 'tone', 'ttwo', 'tthree', 'tfour', 'tfive', 'tsix', 'tseven', 'teight', 'valid']
 
 # Read the CSV file into a pandas DataFrame
-df = pd.read_csv('../logs/trainingLogs.csv', names=column_names, header=None)
+df = pd.read_csv('logs/trainingLogs.csv', names=column_names, header=None)
 
 # Extract features and target variable
-X = df[['edgeData', 'laplacianData', 'noiseData', 'pdfHeight', 'pdfWidth']]
+X = df[['edgeData', 'laplacianData', 'noiseData', 'pdfHeight', 'pdfWidth', 'tone', 'ttwo', 'tthree', 'tfour', 'tfive', 'tsix', 'tseven', 'teight']]
 y = df['valid']
 
 # Split the data into training and testing sets
@@ -24,7 +24,7 @@ model = RandomForestClassifier()
 model.fit(X_train, y_train)
 
 # Save the trained model
-dump(model, 'training/model.joblib')
+dump(model, 'training/model1.joblib')
 
 # Make predictions on the testing set
 y_pred = model.predict(X_test)
