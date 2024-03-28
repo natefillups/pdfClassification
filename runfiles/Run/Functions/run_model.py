@@ -41,7 +41,10 @@ def format_data(metadata_list, invalid_files, OUTPUT_FILE):
     for metadata, valid in zip(metadata_list[1:], invalid_files):
         if not valid: page_dict[metadata[0]].add(metadata[1])
 
+    for key in page_dict:
+        page_dict[key] = {value + 1 for value in page_dict[key]}
+
     with open(OUTPUT_FILE, 'w') as f:
-        f.write(f"{metadata_list[0][0].ljust(30, ' ')}{metadata_list[0][1]}\n")
+        f.write(f"{metadata_list[0][0].ljust(40, ' ')}{metadata_list[0][1]}\n")
         for key in page_dict:
-            f.write(f"{key.ljust(30, ' ')}{page_dict[key]}\n")
+            f.write(f"{key.ljust(40, ' ')}{page_dict[key]}\n")
