@@ -4,6 +4,12 @@ Problem Statement:
 
 There are many documents being scanned at my company and there is no automized way to do quality-control besides manual review. To automate this process I have created a machine learning model to take metadata from the manually reviewed documents and then automatically process the unprocessed documents by running it through the machine learning model.
 
+Local Setup:
+
+1. Create a virtualenv for Python 3.12.1.
+2. Run the command `pip install -r requirements.txt`
+3. Add the desired PDF files and run
+
 How to run:
 
 To train the data based on the `PdfFiles/Training` files and the `PdfFiles/training_data.csv`:
